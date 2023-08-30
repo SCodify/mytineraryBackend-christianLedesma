@@ -1,4 +1,4 @@
-const City = require("../models/City")
+const City = require("../models/cityModel")
 
 const getCities = async (req, res) => {
     try {
@@ -6,11 +6,11 @@ const getCities = async (req, res) => {
         if (searchTerm) {
             //const regex = new RegExp(`^${searchTerm}`, 'i')
             //const filteredCities = await City.find({ nombre: regex }) 
-            const filteredCities = await City.find({ nombre: {$regex: `^${searchTerm}`, $options: 'i'} }) 
+            const filteredCities = await City.find({ nombre: {$regex: `^${searchTerm}`, $options: 'i'} }).populate("_itineraries")  
             res.status(200).json({ cities: filteredCities }) 
         } else {
-            let cities = await City.find()
-            res.status(200).json({ cities })  
+            let cities = await City.find().populate("_itineraries")  
+            res.status(200).json({ cities })
         }
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -19,8 +19,9 @@ const getCities = async (req, res) => {
 
 const getCity = async (req, res) => {
     try {
-        const {id} = req.params
-        const city = await City.findById(id)
+        const {cid} = req.params
+        const city = await City.findById(cid).populate("_itineraries")
+         
         res.status(200).json({ city })
     } catch (error) {
         res.status(500).json({ message: error.message })  
@@ -43,8 +44,8 @@ const addCity = async (req, res) => {
 
 const deleteCity = async (req, res) => {
     try {
-        const {id} = req.params
-        await City.findByIdAndDelete(id)
+        const {cid} = req.params
+        await City.findByIdAndDelete(cid)
     
         res.status(201).json({
             message: "City has been delete",
@@ -64,8 +65,8 @@ const updateCity = async (req, res) => {
             datos: req.body.portada
         }
         
-        const {id} = req.params
-        await City.findByIdAndUpdate(id, newData)
+        const {cid} = req.params
+        await City.findByIdAndUpdate(cid, newData)
 
         res.status(201).json({
             message: "City has been update",
