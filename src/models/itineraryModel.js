@@ -1,5 +1,3 @@
-"use strict";
-
 const { Schema, model, Types } = require('mongoose')
 
 const schemaItinerary = new Schema({

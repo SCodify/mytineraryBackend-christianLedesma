@@ -15,9 +15,14 @@ const getItineraries = async (req, res) => {
         let { cid } = req.params
         const cityFound = await City.findById(cid)
         if(cityFound) {
-            const itineraries = await Itinerary.find({_city: cid}).populate("_city")
+            const itineraries = await Itinerary.find({_city: cid}).populate("_city", {_id:0, nombre: 1})
+
+            if(!itineraries.length){
+                return res.json([])
+            }
             res.status(200).json({ itineraries })
         }
+        
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
