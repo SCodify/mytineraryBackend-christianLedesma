@@ -2,6 +2,29 @@ require('dotenv').config()
 const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
+const { Strategy, ExtractJwt } = require('passport-jwt')
+
+const passportVerifycator = passport.use(
+  new Strategy(
+  { 
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.JWT
+  },
+  async (payload, done) => {
+    let userFounded = await User.findOne({email: payload.email})
+
+  try {
+    if(userFounded){
+     return done(null, userFounded)
+    } else {
+      return done(null)
+    }
+  } catch (error) {
+    return done(error)
+  }
+  })
+)
 
 const hashPassword = (req, res, next) => {
   try {
@@ -59,4 +82,4 @@ const generateToken = (req, res, next) => {
   }
 }
 
-module.exports = { hashPassword, verifyPassword, varifyUserExists, generateToken }
+module.exports = { passportVerifycator, hashPassword, verifyPassword, varifyUserExists, generateToken }
