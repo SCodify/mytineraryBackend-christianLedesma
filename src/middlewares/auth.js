@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const { Strategy, ExtractJwt } = require('passport-jwt')
 
-const passportVerifycator = passport.use(
+const passportVerificator = passport.use(
   new Strategy(
   { 
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -72,7 +72,7 @@ const varifyUserExists = async (req, res, next) => {
 const generateToken = (req, res, next) => {
   try {
     const secretKey = process.env.JWT
-    const token = jwt.sign({email: req.body.email}, secretKey, {expiresIn: 60*3})
+    const token = jwt.sign({email: req.user.email}, secretKey, {expiresIn: 60*5})
 
     req.token = token
 
@@ -82,4 +82,4 @@ const generateToken = (req, res, next) => {
   }
 }
 
-module.exports = { passportVerifycator, hashPassword, verifyPassword, varifyUserExists, generateToken }
+module.exports = { passportVerificator, hashPassword, verifyPassword, varifyUserExists, generateToken }

@@ -36,6 +36,7 @@ const login = async (req, res) => {
       user: {
         nombre: req.user.nombre,
         email: req.user.email,
+        foto: req.user.foto,
         _id: req.user._id
       }
     })
@@ -51,12 +52,13 @@ const authenticated = async (req, res) => {
   try {
   
     res.status(200).json({
-      message: ["Authenticated successfully"],
+      message: "Authenticated successfully",
       token: req.token,
       success: true,
       user: {
         nombre: req.user.nombre,
         email: req.user.email,
+        foto: req.user.foto,
         _id: req.user._id
       }
     })
@@ -68,4 +70,17 @@ const authenticated = async (req, res) => {
   }
 }
 
-module.exports = { register, login, authenticated }
+const logout = async (req, res) => {
+  try {
+    res.status(200).json({
+      message: "Logged out",
+      token: req.token
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+}
+
+module.exports = { register, login, authenticated, logout }

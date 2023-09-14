@@ -22,8 +22,7 @@ const schemaUser = new Schema({
         required: true
     },
     pais: {
-      type: String,
-      required: true
+      type: String
     }
   },
 {
